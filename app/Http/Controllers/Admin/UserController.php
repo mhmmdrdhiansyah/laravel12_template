@@ -60,6 +60,7 @@ class UserController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
+        $this->authorize('users.delete');
         if ($user->id === \Illuminate\Support\Facades\Auth::id()) {
             return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account.');
         }

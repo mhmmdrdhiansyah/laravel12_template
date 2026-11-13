@@ -23,8 +23,10 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 .superpowers/
-jar.txt
+jar*.txt
 jar2.txt
 public/storage
 storage/app/public/avatars/*
 !storage/app/public/avatars/.gitignore
+_ide_helper.php
+docker-compose.override.yml

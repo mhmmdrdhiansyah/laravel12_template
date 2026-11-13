@@ -31,5 +31,9 @@ class AppServiceProvider extends ServiceProvider
         Fortify::loginView(fn () => view('auth.login'));
         Fortify::requestPasswordResetLinkView(fn () => view('auth.forgot-password'));
         Fortify::resetPasswordView(fn ($request) => view('auth.reset-password', ['request' => $request]));
+
+        // Without this, Fortify's NewPasswordController cannot resolve the
+        // ResetsUserPasswords contract (BindingResolutionException on POST /reset-password).
+        Fortify::resetUserPasswordsUsing(\App\Actions\Fortify\ResetUserPassword::class);
     }
 }
