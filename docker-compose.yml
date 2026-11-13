@@ -6,7 +6,9 @@ services:
         UID: 1000
     volumes:
       - ./:/var/www/html
-    networks: [mysql_net]
+    networks:
+      mysql_net:
+        aliases: [app-template]
   nginx:
     image: nginx:alpine
     ports: ["8089:80"]
