@@ -1,59 +1,50 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel 12 Admin Panel Template
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Reusable starter template: clone → `docker compose up` → working login + Metronic admin panel with users/roles/permissions management and profile page.
 
-## About Laravel
+**Stack:** Laravel 12, PHP 8.3 (fpm-alpine), Fortify, Spatie Laravel Permission v6, Metronic 8.3 demo1 (Bootstrap 5 dist), nginx-alpine, MySQL 8.4 (external container).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Preconditions
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Docker Engine + compose plugin.
+- An existing MySQL 8.4 container on a docker network named `mysql_net` (database `app`, user `app`, password `app` — **DEV-ONLY** defaults; adjust `.env` if yours differ).
+- Host user uid/gid `1000` (default on single-user Linux). If different, build with `--build-arg UID=<your-uid>` (see `docker-compose.yml` build args).
+- No host PHP/composer needed — everything runs in-container.
+- No Metronic source needed — assets are committed under `public/assets/`.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Setup (exact order, all in-container)
 
-## Learning Laravel
+```bash
+cp .env.example .env            # adjust DB_* if your MySQL differs
+docker compose up -d --build
+docker compose exec -u www-data app composer install
+docker compose exec -u www-data app php artisan key:generate
+docker compose exec -u www-data app php artisan migrate:fresh --seed
+docker compose exec -u www-data app php artisan storage:link
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Login
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+`http://localhost:8088/login` (host port is `8088:80` in `docker-compose.yml` — override it there if that port is taken on your machine, e.g. a project already bound to it)
 
-## Laravel Sponsors
+| Account | Password | Access |
+|---|---|---|
+| `superadmin@example.com` | `password` | Everything (via `Gate::before`) |
+| `user@example.com` | `password` | Dashboard + own profile only |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Roles & permissions
 
-### Premium Partners
+- Exactly 9 permissions: `users.{view,create,edit,delete}`, `roles.{view,create,edit,delete}`, `permissions.view`.
+- `super-admin` bypasses all checks via `Gate::before` — no per-permission assignment.
+- Role `user` has zero permissions: sidebar shows only Dashboard + Profile; `/admin/users` etc. return 403.
+- Route middleware gates `.view` per resource; controllers authorize `create`/`edit`/`delete` per action.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Forgot password
 
-## Contributing
+Mail goes to `storage/logs/laravel.log` (`MAIL_MAILER=log`). Copy the reset URL from that file into the browser.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Notes
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `DB_HOST=mysql` is the container-network hostname of the external MySQL — never a hard-coded credential.
+- Profile photos upload to `storage/app/public/avatars` (2MB max, jpg/jpeg/png) served via the `public/storage` symlink.
+- All composer/artisan commands run as `docker compose exec -u www-data app ...` (pool user rebuilt to uid 1000 so bind-mount writes stay host-owned).
