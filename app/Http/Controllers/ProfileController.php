@@ -40,6 +40,8 @@ class ProfileController extends Controller
 
     public function updatePassword(UpdatePasswordRequest $request): RedirectResponse
     {
+        Auth::logoutOtherDevices($request->validated('current_password'));
+
         $request->user()->update([
             'password' => $request->validated('password'),
         ]);
