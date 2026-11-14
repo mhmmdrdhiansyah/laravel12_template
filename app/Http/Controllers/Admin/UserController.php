@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -13,11 +14,18 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('admin.users.index', [
-            'users' => User::with('roles')->orderBy('id')->get(),
-        ]);
+        $term = '%'.str_replace(['%', '_'], ['\%', '\_'], $request->input('search', '')).'%';
+
+        $users = User::with('roles')
+            ->when($request->filled('search'), fn ($query) => $query
+                ->where(fn ($q) => $q->where('name', 'like', $term)->orWhere('email', 'like', $term)))
+            ->orderBy('id')
+            ->paginate(25)
+            ->withQueryString();
+
+        return view('admin.users.index', ['users' => $users]);
     }
 
     public function create(): View

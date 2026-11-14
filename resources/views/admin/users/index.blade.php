@@ -32,9 +32,9 @@
     <div class="card">
         <div class="card-header border-0 pt-6">
             <div class="card-title">
-                <div class="d-flex align-items-center position-relative my-1">
-                    <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search user" />
-                </div>
+                <form method="GET" action="{{ route('admin.users.index') }}" class="d-flex align-items-center position-relative my-1">
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-solid w-250px ps-14" placeholder="Search name or email" />
+                </form>
             </div>
         </div>
         <div class="card-body pt-0">
@@ -96,18 +96,8 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $users->links() }}
         </div>
     </div>
 @endsection
 
-@push('vendor-scripts')
-<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-@endpush
-
-@push('scripts')
-<script>
-KTUtil.onDOMContentLoaded((function() {
-    $(document.getElementById('kt_table_users')).DataTable({info:!1,order:[],pageLength:10,lengthChange:!1,columnDefs:[{orderable:!1,targets:0}]});
-}));
-</script>
-@endpush

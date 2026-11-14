@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -14,11 +15,17 @@ class RoleController extends Controller
 {
     public const PROTECTED_ROLES = ['super-admin', 'user'];
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('admin.roles.index', [
-            'roles' => Role::withCount('permissions')->orderBy('id')->get(),
-        ]);
+        $term = '%'.str_replace(['%', '_'], ['\%', '\_'], $request->input('search', '')).'%';
+
+        $roles = Role::withCount('permissions')
+            ->when($request->filled('search'), fn ($query) => $query->where('name', 'like', $term))
+            ->orderBy('id')
+            ->paginate(25)
+            ->withQueryString();
+
+        return view('admin.roles.index', ['roles' => $roles]);
     }
 
     public function create(): View
