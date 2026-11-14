@@ -57,11 +57,7 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        $data = $request->validated();
-        if (! isset($data['password'])) {
-            unset($data['password']);
-        }
-        $user->update($data);
+        $user->update($request->validated());
         if ($user->id === Auth::id()
             && $user->hasRole('super-admin')
             && ! in_array('super-admin', $request->validated('roles', []), true)) {
