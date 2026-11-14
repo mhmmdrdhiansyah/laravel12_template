@@ -13,6 +13,8 @@ use Spatie\Permission\Models\Role;
  */
 class RoleController extends Controller
 {
+    public const PROTECTED_ROLES = ['super-admin', 'user'];
+
     public function index(): View
     {
         return view('admin.roles.index', [
@@ -49,6 +51,11 @@ class RoleController extends Controller
     public function update(\Illuminate\Http\Request $request, Role $role): RedirectResponse
     {
         $this->authorize('roles.edit');
+        if ($role->name !== $request->input('name')
+            && in_array($role->name, self::PROTECTED_ROLES, true)) {
+            return redirect()->route('admin.roles.edit', $role)
+                ->with('error', 'This role is protected and cannot be renamed.');
+        }
         $request->validate(['name' => ['required', 'string', 'max:255', \Illuminate\Validation\Rule::unique('roles', 'name')->ignore($role->id)]]);
 
         $role->update(['name' => $request->input('name')]);
@@ -60,7 +67,7 @@ class RoleController extends Controller
     public function destroy(Role $role): RedirectResponse
     {
         $this->authorize('roles.delete');
-        if (in_array($role->name, ['super-admin', 'user'], true)) {
+        if (in_array($role->name, self::PROTECTED_ROLES, true)) {
             return redirect()->route('admin.roles.index')->with('error', 'This role is protected and cannot be deleted.');
         }
         $role->delete();
