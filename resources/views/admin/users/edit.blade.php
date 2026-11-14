@@ -10,6 +10,9 @@
 @section('content')
     <div class="card">
         <div class="card-body">
+            @if (session('error'))
+                <div class="alert alert-light-danger fs-6 mb-7">{{ session('error') }}</div>
+            @endif
             <form class="form" method="POST" action="{{ route('admin.users.update', $user) }}">
                 @csrf
                 @method('PUT')

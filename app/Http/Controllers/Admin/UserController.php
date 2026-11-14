@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
@@ -53,6 +54,12 @@ class UserController extends Controller
             unset($data['password']);
         }
         $user->update($data);
+        if ($user->id === Auth::id()
+            && $user->hasRole('super-admin')
+            && ! in_array('super-admin', $request->validated('roles', []), true)) {
+            return redirect()->route('admin.users.edit', $user)
+                ->with('error', 'You cannot remove your own super-admin role.');
+        }
         $user->syncRoles($request->validated('roles', []));
 
         return redirect()->route('admin.users.index')->with('success', 'User updated.');
@@ -61,7 +68,7 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         $this->authorize('users.delete');
-        if ($user->id === \Illuminate\Support\Facades\Auth::id()) {
+        if ($user->id === Auth::id()) {
             return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account.');
         }
         $user->delete();
