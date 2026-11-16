@@ -1,7 +1,8 @@
 {{-- Metronic reference: dist/documentation/base/forms/controls.html + list.html checkbox pattern (metronic-notes.md §4/§5) --}}
 @extends('layouts.admin')
 
-@section('page-title')
+@section('title', 'Edit Role — ' . $role->name)
+    @section('page-title')
     <div class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
         <h1 class="fw-bolder my-2">Edit Role — {{ $role->name }}</h1>
     </div>

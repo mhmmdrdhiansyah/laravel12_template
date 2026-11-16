@@ -1,7 +1,8 @@
 {{-- Metronic reference: dist/documentation/base/forms/controls.html (metronic-notes.md §4) --}}
 @extends('layouts.admin')
 
-@section('page-title')
+@section('title', 'Add User')
+    @section('page-title')
     <div class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
         <h1 class="fw-bolder my-2">Add User</h1>
     </div>

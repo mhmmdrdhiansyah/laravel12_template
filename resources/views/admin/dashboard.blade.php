@@ -1,7 +1,8 @@
 {{-- Metronic reference: metronic-notes.md §2 (index2.html stat cards) — auth-only view --}}
 @extends('layouts.admin')
 
-@section('page-title')
+@section('title', 'Dashboard')
+    @section('page-title')
     <div class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
         <h1 class="fw-bolder my-2">Dashboard</h1>
     </div>
