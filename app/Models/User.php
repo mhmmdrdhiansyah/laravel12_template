@@ -24,6 +24,9 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar_path',
+        'status',
+        'activated_at',
+        'activated_by',
     ];
 
     /**
@@ -45,7 +48,13 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'activated_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
     }
 }

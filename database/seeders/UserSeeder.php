@@ -12,12 +12,12 @@ class UserSeeder extends Seeder
     {
         User::updateOrCreate(
             ['email' => 'superadmin@example.com'],
-            ['name' => 'Super Admin', 'password' => Hash::make('password')],
+            ['name' => 'Super Admin', 'password' => Hash::make('password'), 'status' => 'active'],
         )->assignRole('super-admin');
 
         User::updateOrCreate(
             ['email' => 'user@example.com'],
-            ['name' => 'Regular User', 'password' => Hash::make('password')],
+            ['name' => 'Regular User', 'password' => Hash::make('password'), 'status' => 'active'],
         )->assignRole('user');
     }
 }

@@ -41,6 +41,9 @@ class UserController extends Controller
             'name' => $request->validated('name'),
             'email' => $request->validated('email'),
             'password' => $request->validated('password'),
+            'status' => 'active',
+            'activated_at' => now(),
+            'activated_by' => Auth::id(),
         ]);
         $user->syncRoles($request->validated('roles', []));
 
