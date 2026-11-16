@@ -58,8 +58,8 @@
 
 **Acceptance:** input search penuh di 375px, tabel bisa discroll horizontal, tidak ada layout break. Verifikasi manual di Task 7.
 
-- [ ] users/index: table-responsive + w-md input + flex-stack header
-- [ ] roles/index: idem
+- [x] users/index: table-responsive + w-md input + flex-stack header
+- [x] roles/index: idem
 
 ## Task 2 — Ekstrak partial tabel users
 
@@ -86,7 +86,7 @@
 
 **Acceptance:** halaman users render identik seperti sebelum refactor (diff visual: tidak ada), dan `curl` halaman tetap 200.
 
-- [ ] Partial dibuat, index include, output HTML tidak berubah
+- [x] Partial dibuat, index include, output HTML tidak berubah
 
 ## Task 3 — Dukungan partial di controller
 
@@ -169,8 +169,8 @@ DILARANG: menambah parameter, route baru, atau response type lain. Query string 
 
 **Acceptance:** ketik di search → tbody berubah tanpa reload halaman (cek: console tidak ada navigasi, nilai input tidak hilang); URL berisi `?search=…`; refresh browser mempertahankan hasil; request lama dibatalkan saat mengetik cepat.
 
-- [ ] users: live search jalan sesuai acceptance
-- [ ] roles: idem
+- [x] users: live search jalan sesuai acceptance
+- [x] roles: idem
 
 ## Task 5 — Permissions: responsive only
 
@@ -218,7 +218,7 @@ Jalankan semua, urut:
 
 **Definition of done:** semua checkbox terisi, suite hijau, langkah 2–5 terverifikasi di browser. Laporan harus menyebut hasil viewport yang benar-benar dites, bukan "seharusnya responsif".
 
-- [ ] Test suite hijau
-- [ ] Viewport 375/768/1440 dicek di 3 halaman list + 1 form + dashboard, profile, login
-- [ ] Live search users & roles terverifikasi di Network tab
-- [ ] Tidak ada file temporer tersisa
+- [ ] Test suite hijau — 3 fail PRE-EXISTING (RoleCrudTest dkk, "account is not active"; sama persis di clean HEAD e7ffac9, bukan dari perubahan ini)
+- [x] Viewport 375/768/1440 dicek di 3 halaman list + 1 form + dashboard, profile, login
+- [x] Live search users & roles terverifikasi di Network tab
+- [x] Tidak ada file temporer tersisa

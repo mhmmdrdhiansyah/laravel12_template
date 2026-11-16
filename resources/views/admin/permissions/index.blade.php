@@ -9,15 +9,17 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header border-0 pt-6">
-            <div class="card-title">
+        <div class="card-header border-0 pt-6 d-flex flex-stack flex-wrap gap-2">
+            <div class="card-title m-0">
                 <div class="d-flex align-items-center position-relative my-1">
-                    <input type="text" data-kt-permission-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search permission" />
+                    <input type="text" data-kt-permission-table-filter="search" class="form-control form-control-solid w-100 w-md-250px ps-14" placeholder="Search permission" />
                 </div>
             </div>
+            <div class="card-toolbar m-0"></div>
         </div>
         <div class="card-body pt-0">
-            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_permissions">
+            <div class="table-responsive">
+                <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_permissions">
                 <thead>
                     <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">Name</th>
@@ -34,7 +36,8 @@
                     </tr>
                     @endforeach
                 </tbody>
-            </table>
+                </table>
+            </div>
         </div>
     </div>
 @endsection

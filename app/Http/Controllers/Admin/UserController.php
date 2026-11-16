@@ -23,7 +23,11 @@ class UserController extends Controller
                 ->where(fn ($q) => $q->where('name', 'like', $term)->orWhere('email', 'like', $term)))
             ->orderBy('id')
             ->paginate(25)
-            ->withQueryString();
+            ->appends(request()->except('partial'));
+
+        if ($request->boolean('partial')) {
+            return view('admin.users._table', ['users' => $users]);
+        }
 
         return view('admin.users.index', ['users' => $users]);
     }

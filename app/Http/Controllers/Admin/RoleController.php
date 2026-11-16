@@ -23,7 +23,11 @@ class RoleController extends Controller
             ->when($request->filled('search'), fn ($query) => $query->where('name', 'like', $term))
             ->orderBy('id')
             ->paginate(25)
-            ->withQueryString();
+            ->appends(request()->except('partial'));
+
+        if ($request->boolean('partial')) {
+            return view('admin.roles._table', ['roles' => $roles]);
+        }
 
         return view('admin.roles.index', ['roles' => $roles]);
     }

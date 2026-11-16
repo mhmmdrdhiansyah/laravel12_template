@@ -30,12 +30,13 @@
     @endif
 
     <div class="card">
-        <div class="card-header border-0 pt-6">
-            <div class="card-title">
+        <div class="card-header border-0 pt-6 d-flex flex-stack flex-wrap gap-2">
+            <div class="card-title m-0">
                 <form method="GET" action="{{ route('admin.users.index') }}" class="d-flex align-items-center position-relative my-1">
-                    <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-solid w-250px ps-14" placeholder="Search name or email" />
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-solid w-100 w-md-250px ps-14" placeholder="Search name or email" />
                 </form>
             </div>
+            <div class="card-toolbar m-0"></div>
         </div>
         <div class="card-body pt-0">
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
@@ -135,7 +136,55 @@
                 </tbody>
             </table>
             {{ $users->links() }}
+        <div id="kt_users_table_container">
+            @include('admin.users._table', ['users' => $users])
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    var form = document.querySelector('.card-title form');
+    var input = form.querySelector('input[name="search"]');
+    var container = document.getElementById('kt_users_table_container');
+    var controller = null;
+    var timer = null;
+
+    function refresh() {
+        if (controller) controller.abort();
+        controller = new AbortController();
+        var params = new URLSearchParams(window.location.search);
+        if (input.value) { params.set('search', input.value); } else { params.delete('search'); }
+        params.delete('page');
+        params.set('partial', '1');
+
+        container.style.opacity = '0.5';
+        fetch(form.action + '?' + params.toString(), { signal: controller.signal })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then(function (html) {
+            container.innerHTML = html;
+            container.style.opacity = '';
+            var url = new URL(window.location);
+            if (input.value) { url.searchParams.set('search', input.value); } else { url.searchParams.delete('search'); }
+            url.searchParams.delete('partial');
+            url.searchParams.delete('page');
+            window.history.replaceState({}, '', url);
+        })
+        .catch(function (e) { if (e.name !== 'AbortError') { container.style.opacity = ''; } });
+    }
+
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(refresh, 300);
+    });
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearTimeout(timer);
+        refresh();
+    });
+})();
+</script>
+@endpush
 
