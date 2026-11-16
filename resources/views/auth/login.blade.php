@@ -48,6 +48,7 @@
                             <span class="indicator-label">Continue</span>
                         </button>
                     </div>
+                    <div class="text-center fs-6">No account? <a href="{{ route('register') }}" class="link-primary fw-bolder">Register</a></div>
                 </form>
             </div>
         </div>

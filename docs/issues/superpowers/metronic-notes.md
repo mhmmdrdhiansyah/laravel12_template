@@ -129,3 +129,9 @@ KTUtil.onDOMContentLoaded((function() {
 3. Chart widgets need `widgets.js` — skip charts unless vanilla init proves console-clean.
 4. No favicon in dist — no `<link rel="icon">` anywhere.
 5. `fullcalendar` bundle is page-vendor for index2 only — not needed.
+
+## Adaptations table
+
+| View | Reference page | Adaptation |
+|---|---|---|
+| `auth/register.blade.php` | `dist/authentication/layouts/basic/sign-up.html` | Kept auth shell + fv-row field pattern; dropped Google button, OR separator, password meter/visibility JS (`sign-up/general.js` not copied), first/last name → single `name` field; `w-lg-600px` → `w-lg-500px` to match sign-in wrapper; form = real Fortify `POST route('register')` with `@csrf`, fields `name`,`email`,`password`,`password_confirmation`, Laravel `@error` blocks; "Sign in here" → `route('login')`. |
