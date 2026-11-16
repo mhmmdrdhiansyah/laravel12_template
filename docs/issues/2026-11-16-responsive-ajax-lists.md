@@ -208,9 +208,10 @@ Jalankan semua, urut:
 
 1. `docker compose exec -u www-data app php artisan test` — suite harus hijau; jika ada test yang gagal karena perubahanmu, perbaiki dulu.
 2. Buka `http://localhost:8088/admin/users` login `superadmin@example.com` / `password` (sesuai README).
-3. Cek 3 viewport (DevTools device toolbar): **375px, 768px, 1440px** — untuk users, roles, permissions, dan 1 form create/edit:
+3. Cek 3 viewport (DevTools device toolbar): **375px, 768px, 1440px** — untuk users, roles, permissions, 1 form create/edit, **dashboard, profile, dan login**:
    - Tidak ada horizontal scroll di level halaman (tabel boleh scroll di dalam wrapper-nya sendiri).
    - Sidebar jadi drawer dengan tombol hamburger.
+   - Halaman-halaman ini (dashboard, profile, login) sudah responsif secara desain — TIDAK BOLEH diedit. Jika ada yang terlihat rusak di viewport manapun, STOP dan laporkan temuan; jangan memperbaiki sendiri di luar scope task.
 4. Users: ketik "super" → tabel terfilter tanpa reload; buka DevTools Network → lihat request `partial=1` dengan status 200 dan request sebelumnya `(canceled)` saat mengetik cepat; URL jadi `?search=super`; refresh → hasil tetap.
 5. Roles: ulangi langkah 4.
 6. Hapus semua file eksperimen/temporer yang kamu buat (tidak seharusnya ada).
@@ -218,6 +219,6 @@ Jalankan semua, urut:
 **Definition of done:** semua checkbox terisi, suite hijau, langkah 2–5 terverifikasi di browser. Laporan harus menyebut hasil viewport yang benar-benar dites, bukan "seharusnya responsif".
 
 - [ ] Test suite hijau
-- [ ] Viewport 375/768/1440 dicek di 3 halaman list + 1 form
+- [ ] Viewport 375/768/1440 dicek di 3 halaman list + 1 form + dashboard, profile, login
 - [ ] Live search users & roles terverifikasi di Network tab
 - [ ] Tidak ada file temporer tersisa
