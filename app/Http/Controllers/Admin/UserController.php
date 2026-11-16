@@ -82,4 +82,51 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')->with('success', 'User deleted.');
     }
+
+    public function activate(User $user): RedirectResponse
+    {
+        $this->authorize('users.activate');
+
+        $user->update([
+            'status' => 'active',
+            'activated_at' => now(),
+            'activated_by' => Auth::id(),
+        ]);
+
+        return redirect()->route('admin.users.index')->with('success', 'User activated.');
+    }
+
+    public function reject(User $user): RedirectResponse
+    {
+        $this->authorize('users.activate');
+
+        if ($user->id === Auth::id()) {
+            return redirect()->route('admin.users.index')->with('error', 'You cannot change your own account status.');
+        }
+
+        if ($user->status !== 'pending') {
+            return redirect()->route('admin.users.index')->with('error', 'Only pending accounts can be rejected.');
+        }
+
+        $user->update(['status' => 'rejected']);
+
+        return redirect()->route('admin.users.index')->with('success', 'User rejected.');
+    }
+
+    public function deactivate(User $user): RedirectResponse
+    {
+        $this->authorize('users.activate');
+
+        if ($user->id === Auth::id()) {
+            return redirect()->route('admin.users.index')->with('error', 'You cannot change your own account status.');
+        }
+
+        if ($user->status !== 'active') {
+            return redirect()->route('admin.users.index')->with('error', 'Only active accounts can be deactivated.');
+        }
+
+        $user->update(['status' => 'deactivated']);
+
+        return redirect()->route('admin.users.index')->with('success', 'User deactivated.');
+    }
 }

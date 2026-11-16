@@ -43,6 +43,7 @@
                     <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">User</th>
                         <th class="min-w-125px">Roles</th>
+                        <th class="min-w-125px">Status</th>
                         <th class="min-w-125px">Joined Date</th>
                         <th class="text-end min-w-100px">Actions</th>
                     </tr>
@@ -70,6 +71,17 @@
                                 <div class="badge badge-light fw-bolder">{{ $role->name }}</div>
                             @endforeach
                         </td>
+                        <td>
+                            @php
+                                $statusBadge = [
+                                    'active' => 'badge-light-success',
+                                    'pending' => 'badge-light-warning',
+                                    'rejected' => 'badge-light-danger',
+                                    'deactivated' => 'badge-light-secondary',
+                                ][$user->status] ?? 'badge-light';
+                            @endphp
+                            <div class="badge {{ $statusBadge }} fw-bolder">{{ ucfirst($user->status) }}</div>
+                        </td>
                         <td>{{ $user->created_at->format('d M Y, H:i') }}</td>
                         <td class="text-end">
                             <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
@@ -83,6 +95,32 @@
                                 <div class="menu-item px-3">
                                     <a href="{{ route('admin.users.edit', $user) }}" class="menu-link px-3">Edit</a>
                                 </div>
+                                @can('users.activate')
+                                @if ($user->status !== 'active')
+                                <div class="menu-item px-3">
+                                    <form method="POST" action="{{ route('admin.users.activate', $user) }}">
+                                        @csrf
+                                        <button type="submit" class="menu-link px-3 border-0 bg-transparent">Activate</button>
+                                    </form>
+                                </div>
+                                @endif
+                                @if ($user->status === 'pending')
+                                <div class="menu-item px-3">
+                                    <form method="POST" action="{{ route('admin.users.reject', $user) }}">
+                                        @csrf
+                                        <button type="submit" class="menu-link px-3 border-0 bg-transparent">Reject</button>
+                                    </form>
+                                </div>
+                                @endif
+                                @if ($user->status === 'active' && $user->id !== auth()->id())
+                                <div class="menu-item px-3">
+                                    <form method="POST" action="{{ route('admin.users.deactivate', $user) }}">
+                                        @csrf
+                                        <button type="submit" class="menu-link px-3 border-0 bg-transparent">Deactivate</button>
+                                    </form>
+                                </div>
+                                @endif
+                                @endcan
                                 <div class="menu-item px-3">
                                     <form method="POST" action="{{ route('admin.users.destroy', $user) }}">
                                         @csrf

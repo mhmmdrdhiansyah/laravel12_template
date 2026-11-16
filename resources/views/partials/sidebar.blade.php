@@ -55,6 +55,10 @@
                         </span>
                     </span>
                     <span class="menu-title">Users</span>
+                    @php $pending = App\Models\User::where('status', 'pending')->count(); @endphp
+                    @if ($pending > 0)
+                        <span class="badge badge-light-danger fs-8 ms-2">{{ $pending }}</span>
+                    @endif
                 </a>
             </div>
             @endcan

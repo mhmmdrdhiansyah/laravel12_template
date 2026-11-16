@@ -15,6 +15,11 @@ Route::middleware(['auth', 'active'])->group(function () {
     // Task 9: profile routes here (auth only, no permission middleware)
 
     Route::middleware('permission:users.view')->resource('admin/users', UserController::class)->except(['show'])->names('admin.users');
+    Route::middleware('permission:users.activate')->group(function () {
+        Route::post('admin/users/{user}/activate', [UserController::class, 'activate'])->name('admin.users.activate');
+        Route::post('admin/users/{user}/reject', [UserController::class, 'reject'])->name('admin.users.reject');
+        Route::post('admin/users/{user}/deactivate', [UserController::class, 'deactivate'])->name('admin.users.deactivate');
+    });
     Route::middleware('permission:roles.view')->resource('admin/roles', RoleController::class)->except(['show'])->names('admin.roles');
     Route::middleware('permission:permissions.view')->get('/admin/permissions', [PermissionController::class, 'index'])->name('admin.permissions.index');
 
