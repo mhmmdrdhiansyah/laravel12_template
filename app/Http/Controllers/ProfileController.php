@@ -31,6 +31,9 @@ class ProfileController extends Controller
                 Storage::disk('public')->delete($user->avatar_path);
             }
             $data['avatar_path'] = $request->file('photo')->store('avatars', 'public');
+        } elseif ($request->boolean('avatar_remove') && $user->avatar_path) {
+            Storage::disk('public')->delete($user->avatar_path);
+            $data['avatar_path'] = null;
         }
 
         $user->update($data);
