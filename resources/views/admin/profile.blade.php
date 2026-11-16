@@ -21,7 +21,7 @@
                         <div class="image-input image-input-outline image-input-placeholder" data-kt-image-input="true">
                             @php
     $avatarUrl = $user->avatar_path
-        ? Storage::disk('public')->url($user->avatar_path)
+        ? url('storage/' . $user->avatar_path)
         : asset('assets/media/avatars/blank.png');
 @endphp
 <div class="image-input-wrapper w-100px h-100px" style="background-image:url('{{ $avatarUrl }}')"></div>
