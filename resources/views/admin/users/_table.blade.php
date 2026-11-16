@@ -18,7 +18,7 @@
                                 <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
                                     <div class="symbol-label">
                                         @if ($user->avatar_path)
-                                            <img src="{{ Storage::disk('public')->url($user->avatar_path) }}" alt="{{ $user->name }}" class="w-100" />
+                                            <img src="{{ url('storage/' . $user->avatar_path) }}" alt="{{ $user->name }}" class="w-100" />
                                         @else
                                             <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="{{ $user->name }}" class="w-100" />
                                         @endif

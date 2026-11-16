@@ -19,7 +19,7 @@
             <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                 <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                     @if (auth()->user()->avatar_path)
-                        <img src="{{ Storage::disk('public')->url(auth()->user()->avatar_path) }}" alt="{{ auth()->user()->name }}" />
+                        <img src="{{ url('storage/' . auth()->user()->avatar_path) }}" alt="{{ auth()->user()->name }}" />
                     @else
                         <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="{{ auth()->user()->name }}" />
                     @endif
@@ -29,7 +29,7 @@
                         <div class="menu-content d-flex align-items-center px-3">
                             <div class="symbol symbol-50px me-5">
                                 @if (auth()->user()->avatar_path)
-                                    <img alt="{{ auth()->user()->name }}" src="{{ Storage::disk('public')->url(auth()->user()->avatar_path) }}" />
+                                    <img alt="{{ auth()->user()->name }}" src="{{ url('storage/' . auth()->user()->avatar_path) }}" />
                                 @else
                                     <img alt="{{ auth()->user()->name }}" src="{{ asset('assets/media/avatars/blank.png') }}" />
                                 @endif
