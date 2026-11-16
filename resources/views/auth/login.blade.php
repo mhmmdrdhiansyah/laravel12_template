@@ -31,7 +31,6 @@
                     <div class="fv-row mb-10">
                         <div class="d-flex flex-stack mb-2">
                             <label class="form-label fw-bolder text-dark fs-6 mb-0">Password</label>
-                            <a href="{{ route('password.request') }}" class="link-primary fs-6 fw-bolder">Forgot Password ?</a>
                         </div>
                         <input class="form-control form-control-lg form-control-solid {{ $errors->has('password') ? 'is-invalid' : '' }}" type="password" name="password" autocomplete="off" />
                         @error('password')

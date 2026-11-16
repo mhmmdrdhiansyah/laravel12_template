@@ -142,8 +142,7 @@ return [
     |
     */
 
-    'features' => [
-        Features::resetPasswords(),
-    ],
+    // Reset password dinonaktifkan; reset dilakukan lewat admin.
+    'features' => [],
 
 ];
